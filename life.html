@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Three.js Experimentation</title>
+  <meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="style.css">
+	  <script src="js/three.min.js"></script>
+	  <script src="js/OrbitControls.js"></script>
+</head>
+<body>
+  <div id="navbar">
+    <ul>
+      <li onclick="clicked('Sun')">Sun</li>
+      <li onclick="clicked('Mercury')">Mercury</li>
+      <li onclick="clicked('Venus')">Venus</li>
+      <li onclick="clicked('Earth')">Earth</li>
+      <li onclick="clicked('Mars')">Mars</li>
+      <li onclick="clicked('Jupiter')">Jupiter</li>
+      <li onclick="clicked('Saturn')">Saturn</li>
+      <li onclick="clicked('Uranus')">Uranus</li>
+      <li onclick="clicked('Neptune')">Neptune</li>
+      <li onclick="clicked('Pluto')">Pluto</li>
+    </ul>
+  </div>
+  <script>
+			var scene, camera, renderer;
+
+      //scene initialization
+      scene = new THREE.Scene();
+      var WIDTH = window.innerWidth;
+      var HEIGHT = window.innerHeight;
+
+      //build renderer
+      renderer = new THREE.WebGLRenderer({antialias:true});
+      renderer.setSize(WIDTH,HEIGHT);
+      document.body.appendChild(renderer.domElement);
+
+      camera = new THREE.PerspectiveCamera(45, WIDTH/HEIGHT, 0.1, 20000);
+      camera.position.set(0,6,0);
+      scene.add(camera);
+
+      camera.position.z = 2500;
+
+			function init() {
+
+				//Resize the renderer based on browser window
+				window.addEventListener('resize',function() {
+						var WIDTH = window.innerWidth;
+						var HEIGHT = window.innerHeight;
+						renderer.setSize(WIDTH,HEIGHT);
+						camera.aspect = WIDTH/HEIGHT;
+						camera.updateProjectionMatrix();
+				});
+
+				//Background color creation
+				renderer.setClearColor(0x222222);
+
+				//Create light to scene
+				var light = new THREE.PointLight(0xffffff);
+				light.position.set(0,0,0);
+				scene.add(light);
+
+
+        //Neptune creation
+				var geometry = new THREE.SphereGeometry(40,100,100);
+				var material = new THREE.MeshBasicMaterial({color: 0xADD8E6});
+        THREE.ImageUtils.crossOrigin = '';
+				material.map = THREE.ImageUtils.loadTexture('http://i.imgur.com/OzUSdIA.jpg?1')
+				var neptune = new THREE.Mesh(geometry,material);
+        neptune.name = "Neptune";
+				scene.add(neptune);
+        neptune.position.x =-1000;
+
+        //Jupiter creation
+        var geometryJ = new THREE.SphereGeometry(40,100,100);
+				var materialJ = new THREE.MeshBasicMaterial({color: 0xADD8E6});
+        THREE.ImageUtils.crossOrigin = '';
+				materialJ.map = THREE.ImageUtils.loadTexture('http://i.imgur.com/yFo0WkO.jpg')
+				var jupiter = new THREE.Mesh(geometryJ,materialJ);
+        jupiter.name = "Jupiter";
+				scene.add(jupiter);
+        jupiter.position.x -=500;
+
+        //Sun creation
+        var geometryS = new THREE.SphereGeometry(100,200,200);
+				var materialS = new THREE.MeshBasicMaterial({color: 0xADD8E6});
+        THREE.ImageUtils.crossOrigin = '';
+				materialS.map = THREE.ImageUtils.loadTexture('http://i.imgur.com/gpDLitT.jpg')
+				var sun = new THREE.Mesh(geometryS,materialS);
+        sun.name = "Sun";
+				scene.add(sun);
+
+        //Mercury creation
+
+
+				//Add orbit controls
+				controls = new THREE.OrbitControls(camera,renderer.domElement);
+			}
+
+      //Build stars
+      function starGenerator()  {
+
+          var geometry, material, mesh;
+          geometry = new THREE.SphereGeometry(1.5, 1.5, 1.5);
+
+          var stars = new THREE.Object3D();
+          scene.add(stars);
+
+          var xRange = window.innerWidth * 2;
+          var yRange = window.innerHeight * 2;
+          var zRange = window.innerHeight * 2;
+
+          for(var i = 0; i < 2500; i++){
+              var grayness = Math.random() * 0.5 + 0.25;
+              material = new THREE.MeshBasicMaterial();
+              var star = new THREE.Mesh(geometry, material);
+              material.color.setRGB(grayness, grayness, grayness);
+              star.position.set(xRange * (0.5 - Math.random()), yRange * (0.5 - Math.random()), zRange * (0.5 - Math.random()));
+              star.rotation.set(Math.random(), Math.random(), Math.random());
+              star.grayness = grayness;
+              stars.add(star);
+          }
+      }
+
+			function animate() {
+				requestAnimationFrame(animate);
+				renderer.render(scene,camera);
+				controls.update();
+			}
+
+      function clicked(planet) {
+        controls.center = scene.getObjectByName(planet).position;
+      }
+
+			init();
+      starGenerator();
+		  animate();
+
+  </script>
+
+</body>
+</html>
