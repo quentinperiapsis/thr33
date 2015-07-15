@@ -66,7 +66,7 @@
 				scene.add(light);
 
         //Sun creation
-        var geometryS = new THREE.SphereGeometry(200,40,40);
+        var geometryS = new THREE.SphereGeometry(100,40,40);
 				var materialS = new THREE.MeshBasicMaterial({color: 0xADD8E6});
         THREE.ImageUtils.crossOrigin = '';
 				materialS.map = THREE.ImageUtils.loadTexture('http://i.imgur.com/gpDLitT.jpg')
@@ -180,7 +180,7 @@
           var xRange = window.innerWidth * 6;
           var yRange = window.innerHeight * 6;
           var zRange = window.innerHeight * 6;
-          
+
           for(var i = 0; i < 25000; i++){
               var grayness = Math.random() * 0.5 + 0.25;
               material = new THREE.MeshBasicMaterial();
